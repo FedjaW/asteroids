@@ -52,6 +52,7 @@ def main():
         for asteroid in asteroids:
             if asteroid.colides_with(player):
                 print("Game over!")
+                sys.exit()
 
         screen.fill("black")
 
