@@ -50,6 +50,10 @@ def main():
             updateme.update(dt)
 
         for asteroid in asteroids:
+            for bullet in shots:
+                if asteroid.colides_with(bullet):
+                    asteroid.split()
+                    bullet.kill()
             if asteroid.colides_with(player):
                 print("Game over!")
                 sys.exit()
