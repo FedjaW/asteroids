@@ -4,6 +4,8 @@
 import pygame
 from constants import * # import magic numbers
 from player import *
+from asteroid import *
+from asteroidfield import *
 
 def main():
     print("Starting asteroids!")
@@ -16,9 +18,24 @@ def main():
     clock = pygame.time.Clock()
     dt = 0 # delta time
 
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
+
+    # To add all instances of a Player to two groups,
+    # group_a and group_b in this example, 
+    # we add a static field called containers to the class
+    Player.containers = (updatable, drawable)
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = (updatable)
+    Shot.containers = (shots, updatable, drawable)
+
     x = SCREEN_WIDTH / 2
     y = SCREEN_HEIGHT / 2
     player = Player(x, y)
+
+    asteroidField = AsteroidField()
 
     # game loop
     # 1. wait for user input
@@ -28,10 +45,18 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+
+        for updateme in updatable:
+            updateme.update(dt)
+
+        for asteroid in asteroids:
+            if asteroid.colides_with(player):
+                print("Game over!")
+
         screen.fill("black")
 
-        player.draw(screen)
-        player.update(dt)
+        for drawme in drawable:
+            drawme.draw(screen)
 
         pygame.display.flip()
 
